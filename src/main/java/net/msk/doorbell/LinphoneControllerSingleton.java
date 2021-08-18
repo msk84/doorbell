@@ -16,8 +16,11 @@ public class LinphoneControllerSingleton {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinphoneControllerSingleton.class);
 
-    @Value("${voip.number2call}")
+    @Value("${voip.call.number}")
     private String VOIP_NUMBER_TO_CALL;
+
+    @Value("${voip.call.timeout_seconds:8}")
+    private int VOIP_CALL_TIMEOUT_SECONDS;
 
     LinphoneControllerSingleton() {
         LOGGER.trace("Created bean 'LinphoneControllerSingleton'.");
@@ -25,16 +28,15 @@ public class LinphoneControllerSingleton {
 
     public void doCall() {
         try {
-            LOGGER.trace("Do call");
+            LOGGER.trace("Calling {} with timeout {}.", VOIP_NUMBER_TO_CALL, VOIP_CALL_TIMEOUT_SECONDS);
             final Process proc = Runtime.getRuntime().exec("linphonec -s " + VOIP_NUMBER_TO_CALL);
-            //BufferedReader linphoneOutput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 
-            // Kill process after 5 seconds
-            if(!proc.waitFor(5, TimeUnit.SECONDS)) {
+            // Kill process after timeout
+            if(!proc.waitFor(VOIP_CALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
                 proc.destroy();
             }
 
-            LOGGER.trace("Hangup");
+            LOGGER.trace("Hang up");
         }
         catch (final IOException | InterruptedException e) {
             LOGGER.error("Exception while doing linphone call.", e);

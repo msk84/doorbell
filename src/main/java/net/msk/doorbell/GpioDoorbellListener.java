@@ -1,5 +1,6 @@
 package net.msk.doorbell;
 
+import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import org.slf4j.Logger;
@@ -17,7 +18,9 @@ public class GpioDoorbellListener implements GpioPinListenerDigital {
 
     @Override
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-        LOGGER.trace("RingRing :: Pin {} went to state {}.", event.getPin(), event.getState());
-        this.linphoneControllerSingleton.doCall();
+        if(event.getState() == PinState.HIGH) {
+            LOGGER.trace("RingRing! :: Pin {} went to state {}.", event.getPin(), event.getState());
+            this.linphoneControllerSingleton.doCall();
+        }
     }
 }
