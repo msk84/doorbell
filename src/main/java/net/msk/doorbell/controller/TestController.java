@@ -1,5 +1,6 @@
-package net.msk.doorbell;
+package net.msk.doorbell.controller;
 
+import net.msk.doorbell.DoorbellEvent;
 import net.msk.doorbell.notificationActuator.LinphoneControllerSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
