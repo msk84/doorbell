@@ -1,7 +1,7 @@
 package net.msk.doorbell.eventSources;
 
 import com.pi4j.io.gpio.*;
-import net.msk.doorbell.DoorbellEventProcessor;
+import net.msk.doorbell.service.DoorbellEventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -25,12 +25,12 @@ public class GpioControllerSingleton implements InitializingBean {
     private int DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS;
 
     private final GpioController gpio;
-    private final DoorbellEventProcessor doorbellEventProcessor;
+    private final DoorbellEventService doorbellEventService;
 
-    public GpioControllerSingleton(final DoorbellEventProcessor doorbellEventProcessor) {
+    public GpioControllerSingleton(final DoorbellEventService doorbellEventService) {
         LOGGER.trace("Created bean 'GpioControllerSingleton'.");
         this.gpio = GpioFactory.getInstance();
-        this.doorbellEventProcessor = doorbellEventProcessor;
+        this.doorbellEventService = doorbellEventService;
     }
 
     @Override
@@ -49,6 +49,6 @@ public class GpioControllerSingleton implements InitializingBean {
 
         final GpioPinDigitalInput doorbellInput = gpio.provisionDigitalInputPin(doorbellInputPin, "doorbellInput", PinPullResistance.PULL_DOWN);
         doorbellInput.setDebounce(DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS);
-        doorbellInput.addListener(new GpioDoorbellListener(this.doorbellEventProcessor));
+        doorbellInput.addListener(new GpioDoorbellListener(this.doorbellEventService));
     }
 }

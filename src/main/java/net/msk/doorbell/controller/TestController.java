@@ -1,7 +1,7 @@
 package net.msk.doorbell.controller;
 
 import net.msk.doorbell.DoorbellEvent;
-import net.msk.doorbell.notificationActuator.LinphoneControllerSingleton;
+import net.msk.doorbell.service.DoorbellEventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +14,15 @@ public class TestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
-    private final LinphoneControllerSingleton linphoneControllerSingleton;
+    private final DoorbellEventService doorbellEventService;
 
-    public TestController(final LinphoneControllerSingleton linphoneControllerSingleton) {
-        this.linphoneControllerSingleton = linphoneControllerSingleton;
+    public TestController(final DoorbellEventService doorbellEventService) {
+        this.doorbellEventService = doorbellEventService;
     }
 
-    @GetMapping("/call")
-    public void doTestCall() {
-        LOGGER.info("Doing a test call now.");
-        this.linphoneControllerSingleton.triggerNotification(new DoorbellEvent("TestController", "TestEvent was triggered by TestController"));
+    @GetMapping("/event")
+    public void triggerTestEvent() {
+        LOGGER.info("Triggering test event now.");
+        this.doorbellEventService.processEvent(new DoorbellEvent("TestController", "TestEvent was triggered by TestController."));
     }
 }

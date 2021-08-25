@@ -1,6 +1,8 @@
 package net.msk.doorbell;
 
-import net.msk.doorbell.notificationActuator.LinphoneControllerSingleton;
+import net.msk.doorbell.notificationActuator.LinphoneNotificationActuatorSingleton;
+import net.msk.doorbell.persistance.EventLogRepository;
+import net.msk.doorbell.service.DoorbellEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,21 +10,23 @@ import static org.mockito.Mockito.*;
 
 class DoorbellEventProcessorTest {
 
-    private DoorbellEventProcessor doorbellEventProcessor;
+    private DoorbellEventService doorbellEventService;
+    private EventLogRepository eventLogRepository;
 
     @BeforeEach
     void setUp() {
-        this.doorbellEventProcessor = new DoorbellEventProcessor();
+        this.eventLogRepository = mock(EventLogRepository.class);
+        this.doorbellEventService = new DoorbellEventService(this.eventLogRepository);
     }
 
     @Test
     void processEvent() {
-        final LinphoneControllerSingleton linphoneControllerSingleton = mock(LinphoneControllerSingleton.class);
+        final LinphoneNotificationActuatorSingleton linphoneNotificationActuatorSingleton = mock(LinphoneNotificationActuatorSingleton.class);
         final DoorbellEvent doorbellEvent = new DoorbellEvent("EventSource", "This is a unit test event");
 
-        this.doorbellEventProcessor.registerNotificationActuator(linphoneControllerSingleton);
-        this.doorbellEventProcessor.processEvent(doorbellEvent);
+        this.doorbellEventService.registerNotificationActuator(linphoneNotificationActuatorSingleton);
+        this.doorbellEventService.processEvent(doorbellEvent);
 
-        verify(linphoneControllerSingleton, times(1)).triggerNotification(doorbellEvent);
+        verify(linphoneNotificationActuatorSingleton, times(1)).triggerNotification(doorbellEvent);
     }
 }

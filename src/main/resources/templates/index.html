@@ -11,6 +11,16 @@
             <div class="container-fluid">
                 <h1 class="display-3">Doorbell</h1>
             </div>
+
+            <div th:each="event : ${event_log}">
+                <div class="container border rounded">
+                    <div class="row">
+                        <div class="col-xs text-center">
+                            <span class="fs-3" th:text="${event.timestamp}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
