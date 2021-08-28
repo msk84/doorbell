@@ -16,12 +16,16 @@ public class EventLogItemEntity {
     @Column
     private String eventQualifier;
 
+    @Column
+    private String eventDescription;
+
     public EventLogItemEntity() {
     }
 
-    public EventLogItemEntity(final String eventQualifier) {
+    public EventLogItemEntity(final String eventQualifier, final String eventDescription) {
         this.timestamp = OffsetDateTime.now();
         this.eventQualifier = eventQualifier;
+        this.eventDescription = eventDescription;
     }
 
     public long getId() {
@@ -46,5 +50,13 @@ public class EventLogItemEntity {
 
     public void setEventQualifier(String eventQualifier) {
         this.eventQualifier = eventQualifier;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
     }
 }

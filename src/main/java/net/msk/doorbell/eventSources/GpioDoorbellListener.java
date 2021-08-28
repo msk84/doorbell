@@ -22,7 +22,7 @@ public class GpioDoorbellListener implements GpioPinListenerDigital {
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         if(event.getState() == PinState.HIGH) {
             LOGGER.trace("RingRing! :: Pin {} went to state {}.", event.getPin(), event.getState());
-            final DoorbellEvent doorbellEvent = new DoorbellEvent("doorbell_1", "Doorbell number one rang.");
+            final DoorbellEvent doorbellEvent = new DoorbellEvent("doorbell.1.ring", "Doorbell number one rang.");
             this.doorbellEventService.processEvent(doorbellEvent);
         }
     }

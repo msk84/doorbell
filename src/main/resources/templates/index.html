@@ -13,10 +13,16 @@
             </div>
 
             <div th:each="event : ${event_log}">
-                <div class="container border rounded">
+                <div class="container-fluid border rounded">
                     <div class="row">
-                        <div class="col-xs text-center">
-                            <span class="fs-3" th:text="${event.timestamp}"></span>
+                        <div class="col">
+                            <span class="fs-5" th:text="${#temporals.format(event.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                        </div>
+                        <div class="col">
+                            <span class="fs-5" th:text="${event.eventQualifier}"></span>
+                        </div>
+                        <div class="col">
+                            <span class="fs-5" th:text="${event.eventDescription}"></span>
                         </div>
                     </div>
                 </div>

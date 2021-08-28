@@ -23,6 +23,6 @@ public class TestController {
     @GetMapping("/event")
     public void triggerTestEvent() {
         LOGGER.info("Triggering test event now.");
-        this.doorbellEventService.processEvent(new DoorbellEvent("TestController", "TestEvent was triggered by TestController."));
+        this.doorbellEventService.processEvent(new DoorbellEvent("test.door.1.ring", "Test doorbell 1 rang."));
     }
 }

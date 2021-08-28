@@ -19,5 +19,4 @@ public class TemplateController {
         model.addAttribute("event_log", this.eventLogService.getEventLog());
         return "index";
     }
-
 }

@@ -29,7 +29,7 @@ public class DoorbellEventService {
 
     public void processEvent(final DoorbellEvent doorbellEvent) {
         LOGGER.trace("Processing DoorbellEvent: {}", doorbellEvent);
-        final EventLogItemEntity eventLogItem = new EventLogItemEntity("door.bell.rang");
+        final EventLogItemEntity eventLogItem = new EventLogItemEntity(doorbellEvent.getEventQualifier(), doorbellEvent.getEventDescription());
         this.eventLogRepository.save(eventLogItem);
         activeActuators.forEach(na -> na.triggerNotification(doorbellEvent));
     }

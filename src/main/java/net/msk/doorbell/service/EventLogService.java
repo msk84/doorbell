@@ -2,6 +2,7 @@ package net.msk.doorbell.service;
 
 import net.msk.doorbell.persistance.EventLogItemEntity;
 import net.msk.doorbell.persistance.EventLogRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,6 @@ public class EventLogService {
     }
 
     public List<EventLogItemEntity> getEventLog() {
-        return this.eventLogRepository.findAll();
+        return this.eventLogRepository.findAll(Sort.by("timestamp").descending());
     }
 }
