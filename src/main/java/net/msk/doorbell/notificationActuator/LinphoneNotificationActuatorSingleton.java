@@ -32,6 +32,11 @@ public class LinphoneNotificationActuatorSingleton implements NotificationActuat
     }
 
     @Override
+    public NotificationActuatorType getType() {
+        return NotificationActuatorType.voip;
+    }
+
+    @Override
     public String getActuatorDescription() {
         return "Linphone VoIP notification actuator";
     }
