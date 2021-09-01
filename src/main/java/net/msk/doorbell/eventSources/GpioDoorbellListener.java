@@ -12,17 +12,17 @@ public class GpioDoorbellListener implements GpioPinListenerDigital {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GpioDoorbellListener.class);
 
-    private DoorbellEventService doorbellEventService;
+    private final DoorbellEventService doorbellEventService;
 
     GpioDoorbellListener(final DoorbellEventService doorbellEventService) {
         this.doorbellEventService = doorbellEventService;
     }
 
     @Override
-    public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+    public void handleGpioPinDigitalStateChangeEvent(final GpioPinDigitalStateChangeEvent event) {
         if(event.getState() == PinState.HIGH) {
             LOGGER.trace("RingRing! :: Pin {} went to state {}.", event.getPin(), event.getState());
-            final DoorbellEvent doorbellEvent = new DoorbellEvent("doorbell.1.ring", "Doorbell number one rang.");
+            final DoorbellEvent doorbellEvent = new DoorbellEvent(event.getPin().getName() + ".ring", "Doorbell rang.");
             this.doorbellEventService.processEvent(doorbellEvent);
         }
     }

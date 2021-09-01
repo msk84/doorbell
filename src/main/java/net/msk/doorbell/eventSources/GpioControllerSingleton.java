@@ -18,8 +18,14 @@ public class GpioControllerSingleton implements InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GpioControllerSingleton.class);
 
-    @Value("${doorbell.pin.wiringpi_address:1}")
-    private int DOORBELL_INPUT_PIN_ADDRESS;
+    @Value("${doorbell.1.pin.wiringpi_address}")
+    private Integer DOORBELL_1_INPUT_PIN_ADDRESS;
+
+    @Value("${doorbell.2.pin.wiringpi_address}")
+    private Integer DOORBELL_2_INPUT_PIN_ADDRESS;
+
+    @Value("${doorbell.3.pin.wiringpi_address}")
+    private Integer DOORBELL_3_INPUT_PIN_ADDRESS;
 
     @Value("${doorbell.pin.debounce_delay_millis:1000}")
     private int DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS;
@@ -39,16 +45,32 @@ public class GpioControllerSingleton implements InitializingBean {
     }
 
     private void initializePins() {
-        LOGGER.trace("Configured properties:: DoorbellPinWiringpi_address: {}, DoorbellPinDebounce_delay_millis {}",DOORBELL_INPUT_PIN_ADDRESS, DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS);
+        LOGGER.trace("Configured properties:: Doorbell_1_PinWiringpi_address: {}, Doorbell_2_PinWiringpi_address: {}, Doorbell_3_PinWiringpi_address: {}, DoorbellPinDebounce_delay_millis {}",
+                DOORBELL_1_INPUT_PIN_ADDRESS, DOORBELL_2_INPUT_PIN_ADDRESS, DOORBELL_3_INPUT_PIN_ADDRESS, DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS);
 
-        Pin doorbellInputPin = RaspiPin.getPinByAddress(DOORBELL_INPUT_PIN_ADDRESS);
-        if(doorbellInputPin == null) {
-            LOGGER.warn("Failed to resolve configured WiringPi-GPIO pin '{}'. Using 'WiringPi-GPIO 1' instead.", DOORBELL_INPUT_PIN_ADDRESS);
-            doorbellInputPin = RaspiPin.GPIO_01;
+        if(DOORBELL_1_INPUT_PIN_ADDRESS != null) {
+            this.registerDoorbellPin(DOORBELL_1_INPUT_PIN_ADDRESS, "doorbell_1");
+            LOGGER.trace("Registered doorbell 1 for pin {}", DOORBELL_1_INPUT_PIN_ADDRESS);
         }
+        if(DOORBELL_2_INPUT_PIN_ADDRESS != null) {
+            this.registerDoorbellPin(DOORBELL_2_INPUT_PIN_ADDRESS, "doorbell_2");
+            LOGGER.trace("Registered doorbell 2 for pin {}", DOORBELL_2_INPUT_PIN_ADDRESS);
+        }
+        if(DOORBELL_3_INPUT_PIN_ADDRESS != null) {
+            this.registerDoorbellPin(DOORBELL_3_INPUT_PIN_ADDRESS, "doorbell_3");
+            LOGGER.trace("Registered doorbell 3 for pin {}", DOORBELL_3_INPUT_PIN_ADDRESS);
+        }
+    }
 
-        final GpioPinDigitalInput doorbellInput = gpio.provisionDigitalInputPin(doorbellInputPin, "doorbellInput", PinPullResistance.PULL_DOWN);
-        doorbellInput.setDebounce(DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS);
-        doorbellInput.addListener(new GpioDoorbellListener(this.doorbellEventService));
+    private void registerDoorbellPin(final Integer address, final String description) {
+        final Pin doorbellInputPin = RaspiPin.getPinByAddress(address);
+        if (doorbellInputPin != null) {
+            final GpioPinDigitalInput doorbellInput = gpio.provisionDigitalInputPin(doorbellInputPin, description, PinPullResistance.PULL_DOWN);
+            doorbellInput.setDebounce(DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS);
+            doorbellInput.addListener(new GpioDoorbellListener(this.doorbellEventService));
+        }
+        else {
+            LOGGER.error("Failed to resolve configured WiringPi-GPIO pin '{}' with description '{}'.", address, description);
+        }
     }
 }
