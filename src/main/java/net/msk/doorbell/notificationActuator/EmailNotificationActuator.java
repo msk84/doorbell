@@ -19,7 +19,7 @@ public class EmailNotificationActuator implements NotificationActuator {
     private static final String EMAIL_REGEX = "^(.+)@(.+)$";
     private static final Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
 
-    private final JavaMailSenderImpl mailService;
+    private JavaMailSenderImpl mailService;
 
     @Value("${spring.mail.username}")
     private String mailSender;
@@ -27,9 +27,8 @@ public class EmailNotificationActuator implements NotificationActuator {
     @Value("${doorbell.notification.mail.recipients}")
     private String mailRecipients;
 
-    public EmailNotificationActuator(final DoorbellEventService doorbellEventService, final JavaMailSenderImpl mailService) {
+    public EmailNotificationActuator(final DoorbellEventService doorbellEventService) {
         doorbellEventService.registerNotificationActuator(this);
-        this.mailService = mailService;
     }
 
     @Override
@@ -46,10 +45,13 @@ public class EmailNotificationActuator implements NotificationActuator {
     public void triggerNotification(final DoorbellEvent doorbellEvent) {
         LOGGER.info("Would do email notification for event: {}", doorbellEvent);
         try {
+            if(this.mailService == null) {
+                this.mailService = new JavaMailSenderImpl();
+            }
             this.sendNotificationMail(doorbellEvent);
         }
         catch (final Exception e) {
-            LOGGER.error("Failed to send notification email.", e);
+            LOGGER.error("Failed to send notification email. Please check your configuration.", e);
         }
     }
 

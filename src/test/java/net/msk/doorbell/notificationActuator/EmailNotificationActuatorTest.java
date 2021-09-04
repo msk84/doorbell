@@ -10,14 +10,14 @@ import static org.mockito.Mockito.*;
 
 class EmailNotificationActuatorTest {
 
-    private JavaMailSenderImpl javaMailSender;
+    //private JavaMailSenderImpl javaMailSender;
     private EmailNotificationActuator emailNotificationActuator;
 
     @BeforeEach
     void setUp() {
         final DoorbellEventService doorbellEventService = mock(DoorbellEventService.class);
-        this.javaMailSender = mock(JavaMailSenderImpl.class);
-        this.emailNotificationActuator = new EmailNotificationActuator(doorbellEventService, this.javaMailSender);
+        //this.javaMailSender = mock(JavaMailSenderImpl.class);
+        this.emailNotificationActuator = new EmailNotificationActuator(doorbellEventService);
     }
 
     @Test

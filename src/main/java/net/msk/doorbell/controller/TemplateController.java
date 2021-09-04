@@ -19,4 +19,9 @@ public class TemplateController {
         model.addAttribute("event_log", this.eventLogService.getEventLog());
         return "index";
     }
+
+    @GetMapping("/test")
+    public String testPage(final Model model) {
+        return "test";
+    }
 }
