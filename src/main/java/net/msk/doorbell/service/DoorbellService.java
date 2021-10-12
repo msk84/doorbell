@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class DoorbellEventService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DoorbellEventService.class);
+public class DoorbellService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DoorbellService.class);
 
     private final List<NotificationActuator> activeActuators = new ArrayList<>();
     private final EventLogRepository eventLogRepository;
     private final List<NotificationActuatorType> notificationActuatorTypeWhitelist;
 
-    public DoorbellEventService(final EventLogRepository eventLogRepository,
-                                @Value("${doorbell.notificationActuators}") final String activatedNotificationActuatorConfigString) {
+    public DoorbellService(final EventLogRepository eventLogRepository,
+                           @Value("${doorbell.notificationActuators}") final String activatedNotificationActuatorConfigString) {
         this.eventLogRepository = eventLogRepository;
         this.notificationActuatorTypeWhitelist = Arrays.stream(activatedNotificationActuatorConfigString.split(","))
                 .map(NotificationActuatorType::valueOf)
@@ -43,5 +43,9 @@ public class DoorbellEventService {
         final EventLogItemEntity eventLogItem = new EventLogItemEntity(doorbellEvent.getEventQualifier(), doorbellEvent.getEventDescription());
         this.eventLogRepository.save(eventLogItem);
         this.activeActuators.forEach(na -> na.triggerNotification(doorbellEvent));
+    }
+
+    public void openDoor() {
+        LOGGER.trace("Door would be opened here...");
     }
 }

@@ -1,7 +1,7 @@
 package net.msk.doorbell.notificationActuator;
 
 import net.msk.doorbell.DoorbellEvent;
-import net.msk.doorbell.service.DoorbellEventService;
+import net.msk.doorbell.service.DoorbellService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,9 +26,9 @@ public class LinphoneNotificationActuatorSingleton implements NotificationActuat
     @Value("${notificationActuator.voip.call.timeout_seconds:8}")
     private int VOIP_CALL_TIMEOUT_SECONDS;
 
-    LinphoneNotificationActuatorSingleton(final DoorbellEventService doorbellEventService) {
+    LinphoneNotificationActuatorSingleton(final DoorbellService doorbellService) {
         LOGGER.trace("Created bean 'LinphoneControllerSingleton'.");
-        doorbellEventService.registerNotificationActuator(this);
+        doorbellService.registerNotificationActuator(this);
     }
 
     @Override

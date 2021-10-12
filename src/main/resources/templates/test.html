@@ -12,12 +12,20 @@
                 <h1 class="display-3">Doorbell</h1>
             </div>
             <div class="container-fluid border rounded">
-                <div class="row">
+                <div class="row p-2">
                     <div class="col">
                         <span class="fs-5">Ring the bell</span>
                     </div>
                     <div class="col">
                         <span class="fs-5"><button class="btn btn-primary" type="submit" th:onclick="ring()">Ring</button></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col">
+                        <span class="fs-5">Open the door</span>
+                    </div>
+                    <div class="col">
+                        <span class="fs-5"><button class="btn btn-primary" type="submit" th:onclick="openDoor()" disabled>Open</button></span>
                     </div>
                 </div>
             </div>

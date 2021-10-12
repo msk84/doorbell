@@ -1,7 +1,7 @@
 package net.msk.doorbell.eventSources;
 
 import com.pi4j.io.gpio.*;
-import net.msk.doorbell.service.DoorbellEventService;
+import net.msk.doorbell.service.DoorbellService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -31,12 +31,12 @@ public class GpioControllerSingleton implements InitializingBean {
     private int DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS;
 
     private final GpioController gpio;
-    private final DoorbellEventService doorbellEventService;
+    private final DoorbellService doorbellService;
 
-    public GpioControllerSingleton(final DoorbellEventService doorbellEventService) {
+    public GpioControllerSingleton(final DoorbellService doorbellService) {
         LOGGER.trace("Created bean 'GpioControllerSingleton'.");
         this.gpio = GpioFactory.getInstance();
-        this.doorbellEventService = doorbellEventService;
+        this.doorbellService = doorbellService;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class GpioControllerSingleton implements InitializingBean {
         if (doorbellInputPin != null) {
             final GpioPinDigitalInput doorbellInput = gpio.provisionDigitalInputPin(doorbellInputPin, description, PinPullResistance.PULL_DOWN);
             doorbellInput.setDebounce(DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS);
-            doorbellInput.addListener(new GpioDoorbellListener(this.doorbellEventService));
+            doorbellInput.addListener(new GpioDoorbellListener(this.doorbellService));
         }
         else {
             LOGGER.error("Failed to resolve configured WiringPi-GPIO pin '{}' with description '{}'.", address, description);

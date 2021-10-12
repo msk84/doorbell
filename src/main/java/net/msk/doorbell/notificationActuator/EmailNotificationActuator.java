@@ -1,10 +1,11 @@
 package net.msk.doorbell.notificationActuator;
 
 import net.msk.doorbell.DoorbellEvent;
-import net.msk.doorbell.service.DoorbellEventService;
+import net.msk.doorbell.service.DoorbellService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Component;
 import java.util.regex.Pattern;
 
 @Component
+@ConditionalOnProperty(
+        value="mail.enabled",
+        havingValue = "true")
 public class EmailNotificationActuator implements NotificationActuator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailNotificationActuator.class);
@@ -27,8 +31,9 @@ public class EmailNotificationActuator implements NotificationActuator {
     @Value("${doorbell.notification.mail.recipients}")
     private String mailRecipients;
 
-    public EmailNotificationActuator(final DoorbellEventService doorbellEventService) {
-        doorbellEventService.registerNotificationActuator(this);
+    public EmailNotificationActuator(final DoorbellService doorbellService) {
+        doorbellService.registerNotificationActuator(this);
+        this.mailService = new JavaMailSenderImpl();
     }
 
     @Override
@@ -45,9 +50,6 @@ public class EmailNotificationActuator implements NotificationActuator {
     public void triggerNotification(final DoorbellEvent doorbellEvent) {
         LOGGER.info("Would do email notification for event: {}", doorbellEvent);
         try {
-            if(this.mailService == null) {
-                this.mailService = new JavaMailSenderImpl();
-            }
             this.sendNotificationMail(doorbellEvent);
         }
         catch (final Exception e) {

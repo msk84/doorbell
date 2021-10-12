@@ -4,7 +4,7 @@ import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import net.msk.doorbell.DoorbellEvent;
-import net.msk.doorbell.service.DoorbellEventService;
+import net.msk.doorbell.service.DoorbellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -15,13 +15,13 @@ import static org.mockito.Mockito.*;
 
 class GpioDoorbellListenerTest {
 
-    private DoorbellEventService doorbellEventService;
+    private DoorbellService doorbellService;
     private GpioDoorbellListener gpioDoorbellListener;
 
     @BeforeEach
     void setUp() {
-        this.doorbellEventService = mock(DoorbellEventService.class);
-        this.gpioDoorbellListener = new GpioDoorbellListener(this.doorbellEventService);
+        this.doorbellService = mock(DoorbellService.class);
+        this.gpioDoorbellListener = new GpioDoorbellListener(this.doorbellService);
     }
 
     @Test
@@ -34,13 +34,13 @@ class GpioDoorbellListenerTest {
 
         Mockito.when(gpioEvent.getState()).thenReturn(PinState.LOW);
         this.gpioDoorbellListener.handleGpioPinDigitalStateChangeEvent(gpioEvent);
-        verifyNoInteractions(this.doorbellEventService);
+        verifyNoInteractions(this.doorbellService);
 
         Mockito.when(gpioEvent.getState()).thenReturn(PinState.HIGH);
         this.gpioDoorbellListener.handleGpioPinDigitalStateChangeEvent(gpioEvent);
 
         final ArgumentCaptor<DoorbellEvent> argument = ArgumentCaptor.forClass(DoorbellEvent.class);
-        verify(this.doorbellEventService, times(1)).processEvent(argument.capture());
+        verify(this.doorbellService, times(1)).processEvent(argument.capture());
         assertEquals("Pin1.ring", argument.getValue().getEventQualifier());
         assertEquals("Doorbell rang.", argument.getValue().getEventDescription());
     }
