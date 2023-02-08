@@ -1,7 +1,7 @@
 package net.msk.doorbell;
 
 import net.msk.doorbell.eventSources.GpioControllerSingleton;
-import net.msk.doorbell.notificationActuator.LinphoneNotificationActuatorSingleton;
+import net.msk.doorbell.notificationActuator.PeersSipPhoneActuator;
 import net.msk.doorbell.notificationActuator.NotificationActuatorType;
 import net.msk.doorbell.persistance.EventLogRepository;
 import net.msk.doorbell.service.DoorbellService;
@@ -24,16 +24,16 @@ class DoorbellEventProcessorTest {
 
     @Test
     void processEvent() {
-        final LinphoneNotificationActuatorSingleton linphoneNotificationActuatorSingleton = mock(LinphoneNotificationActuatorSingleton.class);
-        Mockito.when(linphoneNotificationActuatorSingleton.getType()).thenReturn(NotificationActuatorType.voip);
+        final PeersSipPhoneActuator peersSipPhoneNotificationActuatorSingleton = mock(PeersSipPhoneActuator.class);
+        Mockito.when(peersSipPhoneNotificationActuatorSingleton.getType()).thenReturn(NotificationActuatorType.voip);
 
         final DoorbellEvent doorbellEvent = new DoorbellEvent("EventSource", "This is a unit test event");
 
-        this.doorbellService.registerNotificationActuator(linphoneNotificationActuatorSingleton);
+        this.doorbellService.registerNotificationActuator(peersSipPhoneNotificationActuatorSingleton);
         this.doorbellService.processEvent(doorbellEvent);
 
-        verify(linphoneNotificationActuatorSingleton, times(1)).getType();
-        verify(linphoneNotificationActuatorSingleton, times(1)).getActuatorDescription();
-        verify(linphoneNotificationActuatorSingleton, times(1)).triggerNotification(doorbellEvent);
+        verify(peersSipPhoneNotificationActuatorSingleton, times(1)).getType();
+        verify(peersSipPhoneNotificationActuatorSingleton, times(1)).getActuatorDescription();
+        verify(peersSipPhoneNotificationActuatorSingleton, times(1)).triggerNotification(doorbellEvent);
     }
 }

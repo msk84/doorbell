@@ -14,6 +14,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.0.2</spring.boot.version>
+        <peers.version>0.5.1</peers.version>
     </properties>
 
     <parent>
@@ -76,6 +77,16 @@
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>3.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.peers</groupId>
+            <artifactId>peers-lib</artifactId>
+            <version>${peers.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.peers</groupId>
+            <artifactId>peers-javaxsound</artifactId>
+            <version>${peers.version}</version>
         </dependency>
     </dependencies>
 
