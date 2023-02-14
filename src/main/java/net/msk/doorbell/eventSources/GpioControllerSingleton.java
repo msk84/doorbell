@@ -23,10 +23,10 @@ public class GpioControllerSingleton implements InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GpioControllerSingleton.class);
 
-    @Value("${doorbell.1.pin.wiringpi_address}")
+    @Value("${doorbell.1.pin.bcm_address}")
     private Integer DOORBELL_1_INPUT_PIN_ADDRESS;
 
-    @Value("${doorbell.pin.debounce_delay_millis:1000}")
+    @Value("${doorbell.pin.debounce_delay_millis:100000}")
     private long DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS;
 
     private final Context pi4j = Pi4J.newAutoContext();
@@ -44,30 +44,30 @@ public class GpioControllerSingleton implements InitializingBean {
 
     private void initializePins() {
         LOGGER.trace("Configured properties:: Doorbell_1_PinWiringpi_address: {},  DoorbellPinDebounce_delay_millis {}",
-                DOORBELL_1_INPUT_PIN_ADDRESS, DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS);
+                this.DOORBELL_1_INPUT_PIN_ADDRESS, this.DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS);
 
-        if(DOORBELL_1_INPUT_PIN_ADDRESS != null) {
+        if (this.DOORBELL_1_INPUT_PIN_ADDRESS != null) {
             var buttonConfig = DigitalInput.newConfigBuilder(this.pi4j)
                     .id("bell")
                     .name("DoorBell")
-                    .address(DOORBELL_1_INPUT_PIN_ADDRESS)
+                    .address(this.DOORBELL_1_INPUT_PIN_ADDRESS)
                     .pull(PullResistance.PULL_DOWN)
-                    .debounce(DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS)
+                    .debounce(this.DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS)
                     .provider("pigpio-digital-input");
-            final DigitalInput button = pi4j.create(buttonConfig);
+            final DigitalInput button = this.pi4j.create(buttonConfig);
             button.addListener(e -> {
-                if(e.state() == DigitalState.LOW) {
-                    LOGGER.info("Button was pressed! -- LOW");
+                if (e.state() == DigitalState.LOW) {
+                    LOGGER.info("Button back to LOW");
                 }
                 else {
-                    LOGGER.info("Button was pressed! -- HIGH");
+                    LOGGER.info("Button set to HIGH");
                     LOGGER.info("Ringing the bell!");
                     DoorbellEvent event = new DoorbellEvent("doorbell.ring", "Doorbell rings.");
                     this.doorbellService.processEvent(event);
                 }
             });
 
-            LOGGER.trace("Registered doorbell 1 for pin {}", DOORBELL_1_INPUT_PIN_ADDRESS);
+            LOGGER.trace("Registered doorbell 1 for pin {}", this.DOORBELL_1_INPUT_PIN_ADDRESS);
         }
     }
 }

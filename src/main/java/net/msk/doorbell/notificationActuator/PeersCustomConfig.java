@@ -3,23 +3,45 @@ package net.msk.doorbell.notificationActuator;
 import net.sourceforge.peers.Config;
 import net.sourceforge.peers.media.MediaMode;
 import net.sourceforge.peers.sip.syntaxencoding.SipURI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+@Configuration
 public class PeersCustomConfig implements Config {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PeersCustomConfig.class);
+
+    @Value("${notificationActuator.voip.host_ip_address}")
+    private String NOTIFICATIONACTUATOR_VOIP_HOSTIPADDRESS;
+
+    @Value("${notificationActuator.voip.registrar}")
+    private String NOTIFICATIONACTUATOR_VOIP_REGISTRAR;
+
+    @Value("${notificationActuator.voip.user_name}")
+    private String NOTIFICATIONACTUATOR_VOIP_USERNAME;
+
+    @Value("${notificationActuator.voip.password}")
+    private String NOTIFICATIONACTUATOR_VOIP_PASSWORD;
+
+    @Value("${notificationActuator.voip.call.default_number}")
+    private String NOTIFICATIONACTUATOR_VOIP_CALL_DEFAULTNUMBER;
 
     private InetAddress publicIpAddress;
 
     @Override
     public void save() {
-
     }
 
     @Override
     public InetAddress getLocalInetAddress() {
         try {
-            return InetAddress.getByName("192.168.178.65");
+            LOGGER.info("Using ip address: " + this.NOTIFICATIONACTUATOR_VOIP_HOSTIPADDRESS);
+            return InetAddress.getByName(this.NOTIFICATIONACTUATOR_VOIP_HOSTIPADDRESS);
         }
         catch (final UnknownHostException e) {
             throw new RuntimeException(e);
@@ -33,17 +55,17 @@ public class PeersCustomConfig implements Config {
 
     @Override
     public String getUserPart() {
-        return "DoorPiFon";
+        return this.NOTIFICATIONACTUATOR_VOIP_USERNAME;
     }
 
     @Override
     public String getDomain() {
-        return "fritz.box";
+        return this.NOTIFICATIONACTUATOR_VOIP_REGISTRAR;
     }
 
     @Override
     public String getPassword() {
-        return "aX?752bVm3";
+        return this.NOTIFICATIONACTUATOR_VOIP_PASSWORD;
     }
 
     @Override
@@ -128,5 +150,9 @@ public class PeersCustomConfig implements Config {
 
     @Override
     public void setAuthorizationUsername(final String s) {
+    }
+
+    public String getDefaultNotificationNumber() {
+        return NOTIFICATIONACTUATOR_VOIP_CALL_DEFAULTNUMBER;
     }
 }

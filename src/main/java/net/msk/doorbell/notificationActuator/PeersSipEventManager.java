@@ -12,14 +12,16 @@ import java.net.SocketException;
 
 public class PeersSipEventManager implements SipListener {
 
+    private final PeersCustomConfig peersCustomConfig;
+
     private final UserAgent userAgent;
     private SipRequest sipRequest;
 
-    public PeersSipEventManager() throws SocketException {
+    public PeersSipEventManager(final PeersCustomConfig peersCustomConfig) throws SocketException {
+        this.peersCustomConfig = peersCustomConfig;
         final Logger logger = new PeersLogger();
-        final PeersCustomConfig config = new PeersCustomConfig();
         final JavaxSoundManager javaxSoundManager = new JavaxSoundManager(false, logger, null);
-        userAgent = new UserAgent(this, config, logger, javaxSoundManager);
+        userAgent = new UserAgent(this, this.peersCustomConfig, logger, javaxSoundManager);
         new Thread(() -> {
             try {
                 userAgent.register();
@@ -30,13 +32,13 @@ public class PeersSipEventManager implements SipListener {
     }
 
     public void callDefaultCallee() {
-        this.call("sip:**610@fritz.box");
+        this.call(this.peersCustomConfig.getDefaultNotificationNumber());
     }
 
     public void call(final String callee) {
         new Thread(() -> {
             try {
-                sipRequest = userAgent.invite(callee, null);
+                this.sipRequest = this.userAgent.invite(callee, null);
             } catch (final SipUriSyntaxException e) {
                 e.printStackTrace();
             }
@@ -44,38 +46,38 @@ public class PeersSipEventManager implements SipListener {
     }
 
     public void hangup() {
-        new Thread(() -> userAgent.terminate(sipRequest)).start();
+        new Thread(() -> this.userAgent.terminate(this.sipRequest)).start();
     }
 
     @Override
-    public void registering(SipRequest sipRequest) {
+    public void registering(final SipRequest sipRequest) {
     }
 
     @Override
-    public void registerSuccessful(SipResponse sipResponse) {
+    public void registerSuccessful(final SipResponse sipResponse) {
     }
 
     @Override
-    public void registerFailed(SipResponse sipResponse) {
+    public void registerFailed(final SipResponse sipResponse) {
     }
 
     @Override
-    public void incomingCall(SipRequest sipRequest, SipResponse sipResponse) {
+    public void incomingCall(final SipRequest sipRequest, final SipResponse sipResponse) {
     }
 
     @Override
-    public void remoteHangup(SipRequest sipRequest) {
+    public void remoteHangup(final SipRequest sipRequest) {
     }
 
     @Override
-    public void ringing(SipResponse sipResponse) {
+    public void ringing(final SipResponse sipResponse) {
     }
 
     @Override
-    public void calleePickup(SipResponse sipResponse) {
+    public void calleePickup(final SipResponse sipResponse) {
     }
 
     @Override
-    public void error(SipResponse sipResponse) {
+    public void error(final SipResponse sipResponse) {
     }
 }

@@ -4,8 +4,8 @@ import net.msk.doorbell.DoorbellEvent;
 import net.msk.doorbell.service.DoorbellService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +18,14 @@ public class PeersSipPhoneActuator implements NotificationActuator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PeersSipPhoneActuator.class);
 
-    private PeersSipEventManager eventManager;
+    private final PeersSipEventManager eventManager;
 
-    private DoorbellService doorbellService;
+    private final DoorbellService doorbellService;
 
-    public PeersSipPhoneActuator(final DoorbellService doorbellService) throws SocketException {
+    @Autowired
+    public PeersSipPhoneActuator(final DoorbellService doorbellService, final PeersCustomConfig peersCustomConfig) throws SocketException {
         LOGGER.trace("Created bean 'PeersSipPhoneActuator'.");
-        this.eventManager = new PeersSipEventManager();
+        this.eventManager = new PeersSipEventManager(peersCustomConfig);
         this.doorbellService = doorbellService;
         this.doorbellService.registerNotificationActuator(this);
     }
