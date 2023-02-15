@@ -7,10 +7,13 @@ import net.sourceforge.peers.sip.core.useragent.UserAgent;
 import net.sourceforge.peers.sip.syntaxencoding.SipUriSyntaxException;
 import net.sourceforge.peers.sip.transport.SipRequest;
 import net.sourceforge.peers.sip.transport.SipResponse;
+import org.slf4j.LoggerFactory;
 
 import java.net.SocketException;
 
 public class PeersSipEventManager implements SipListener {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(PeersSipEventManager.class);
 
     private final PeersCustomConfig peersCustomConfig;
 
@@ -31,13 +34,35 @@ public class PeersSipEventManager implements SipListener {
         }).start();
     }
 
-    public void callDefaultCallee() {
-        this.call(this.peersCustomConfig.getDefaultNotificationNumber());
+    public void callDefaultCalleeAndHangup() {
+        new Thread(() -> {
+            try {
+                final String callee = this.peersCustomConfig.getDefaultNotificationNumber();
+                LOGGER.info("Do call to {}.", callee);
+                this.sipRequest = this.userAgent.invite(callee, null);
+                LOGGER.info("Trigger delayed hangup.");
+                this.delayedHangup(this.peersCustomConfig.getHangupDelay());
+            } catch (final SipUriSyntaxException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void delayedHangup(final long seconds) {
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000 * seconds);
+                this.hangup();
+            } catch (final InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void call(final String callee) {
         new Thread(() -> {
             try {
+                LOGGER.info("Do call to {}.", callee);
                 this.sipRequest = this.userAgent.invite(callee, null);
             } catch (final SipUriSyntaxException e) {
                 e.printStackTrace();
@@ -46,6 +71,7 @@ public class PeersSipEventManager implements SipListener {
     }
 
     public void hangup() {
+        LOGGER.info("Hangup!");
         new Thread(() -> this.userAgent.terminate(this.sipRequest)).start();
     }
 

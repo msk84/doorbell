@@ -3,8 +3,6 @@ package net.msk.doorbell.notificationActuator;
 import net.sourceforge.peers.Config;
 import net.sourceforge.peers.media.MediaMode;
 import net.sourceforge.peers.sip.syntaxencoding.SipURI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,8 +11,6 @@ import java.net.UnknownHostException;
 
 @Configuration
 public class PeersCustomConfig implements Config {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PeersCustomConfig.class);
 
     @Value("${notificationActuator.voip.host_ip_address}")
     private String NOTIFICATIONACTUATOR_VOIP_HOSTIPADDRESS;
@@ -31,6 +27,10 @@ public class PeersCustomConfig implements Config {
     @Value("${notificationActuator.voip.call.default_number}")
     private String NOTIFICATIONACTUATOR_VOIP_CALL_DEFAULTNUMBER;
 
+    @Value("${notificationActuator.voip.call.hangup_delay_seconds}")
+    private long NOTIFICATIONACTUATOR_VOIP_CALL_HANGUPDELAYSECONDS;
+
+
     private InetAddress publicIpAddress;
 
     @Override
@@ -40,7 +40,6 @@ public class PeersCustomConfig implements Config {
     @Override
     public InetAddress getLocalInetAddress() {
         try {
-            LOGGER.info("Using ip address: " + this.NOTIFICATIONACTUATOR_VOIP_HOSTIPADDRESS);
             return InetAddress.getByName(this.NOTIFICATIONACTUATOR_VOIP_HOSTIPADDRESS);
         }
         catch (final UnknownHostException e) {
@@ -154,5 +153,9 @@ public class PeersCustomConfig implements Config {
 
     public String getDefaultNotificationNumber() {
         return NOTIFICATIONACTUATOR_VOIP_CALL_DEFAULTNUMBER;
+    }
+
+    public long getHangupDelay() {
+        return NOTIFICATIONACTUATOR_VOIP_CALL_HANGUPDELAYSECONDS;
     }
 }

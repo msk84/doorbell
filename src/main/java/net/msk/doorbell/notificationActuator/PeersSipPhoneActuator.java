@@ -13,7 +13,6 @@ import java.net.SocketException;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-//@Profile("!dev")
 public class PeersSipPhoneActuator implements NotificationActuator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PeersSipPhoneActuator.class);
@@ -47,6 +46,6 @@ public class PeersSipPhoneActuator implements NotificationActuator {
     }
 
     private void doNotificationCall() {
-        this.eventManager.callDefaultCallee();
+        this.eventManager.callDefaultCalleeAndHangup();
     }
 }

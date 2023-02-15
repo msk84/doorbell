@@ -43,7 +43,7 @@ public class GpioControllerSingleton implements InitializingBean {
     }
 
     private void initializePins() {
-        LOGGER.trace("Configured properties:: Doorbell_1_PinWiringpi_address: {},  DoorbellPinDebounce_delay_millis {}",
+        LOGGER.trace("Configured properties:: Doorbell_1_PinBcm_address: {},  DoorbellPinDebounce_delay_millis {}",
                 this.DOORBELL_1_INPUT_PIN_ADDRESS, this.DOORBELL_DEBOUNCE_DELAY_TIME_MILLIS);
 
         if (this.DOORBELL_1_INPUT_PIN_ADDRESS != null) {
@@ -57,17 +57,15 @@ public class GpioControllerSingleton implements InitializingBean {
             final DigitalInput button = this.pi4j.create(buttonConfig);
             button.addListener(e -> {
                 if (e.state() == DigitalState.LOW) {
-                    LOGGER.info("Button back to LOW");
+                    LOGGER.trace("BmcPin {} back to LOW", this.DOORBELL_1_INPUT_PIN_ADDRESS);
                 }
                 else {
-                    LOGGER.info("Button set to HIGH");
+                    LOGGER.trace("BmcPin {} back to HIGH", this.DOORBELL_1_INPUT_PIN_ADDRESS);
                     LOGGER.info("Ringing the bell!");
-                    DoorbellEvent event = new DoorbellEvent("doorbell.ring", "Doorbell rings.");
+                    final DoorbellEvent event = new DoorbellEvent("doorbell.ring", "Doorbell rings.");
                     this.doorbellService.processEvent(event);
                 }
             });
-
-            LOGGER.trace("Registered doorbell 1 for pin {}", this.DOORBELL_1_INPUT_PIN_ADDRESS);
         }
     }
 }
