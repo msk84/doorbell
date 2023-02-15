@@ -18,7 +18,6 @@ class DoorbellEventProcessorTest {
     @BeforeEach
     void setUp() {
         final EventLogRepository eventLogRepository = mock(EventLogRepository.class);
-        final GpioControllerSingleton gpioControllerSingleton = mock(GpioControllerSingleton.class);
         this.doorbellService = new DoorbellService(eventLogRepository, "voip,mail");
     }
 
@@ -34,6 +33,6 @@ class DoorbellEventProcessorTest {
 
         verify(peersSipPhoneNotificationActuatorSingleton, times(1)).getType();
         verify(peersSipPhoneNotificationActuatorSingleton, times(1)).getActuatorDescription();
-        verify(peersSipPhoneNotificationActuatorSingleton, times(1)).triggerNotification(doorbellEvent);
+        verify(peersSipPhoneNotificationActuatorSingleton, times(1)).notify(doorbellEvent);
     }
 }

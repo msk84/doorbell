@@ -41,8 +41,8 @@ public class DoorbellService {
     public void processEvent(final DoorbellEvent doorbellEvent) {
         LOGGER.trace("Processing DoorbellEvent: {}", doorbellEvent);
         final EventLogItemEntity eventLogItem = new EventLogItemEntity(doorbellEvent.getEventQualifier(), doorbellEvent.getEventDescription());
+        this.activeActuators.forEach(na -> na.notify(doorbellEvent));
         this.eventLogRepository.save(eventLogItem);
-        this.activeActuators.forEach(na -> na.triggerNotification(doorbellEvent));
     }
 
     public void openDoor() {

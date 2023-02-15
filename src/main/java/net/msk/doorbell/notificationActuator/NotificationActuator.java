@@ -6,6 +6,6 @@ public interface NotificationActuator {
 
     NotificationActuatorType getType();
     String getActuatorDescription();
-    void triggerNotification(DoorbellEvent doorbellEvent);
+    boolean notify(DoorbellEvent doorbellEvent);
 
 }

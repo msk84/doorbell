@@ -79,7 +79,7 @@ public class PeersCustomConfig implements Config {
 
     @Override
     public MediaMode getMediaMode() {
-        return null;
+        return MediaMode.none;
     }
 
     @Override

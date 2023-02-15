@@ -40,12 +40,13 @@ public class PeersSipPhoneActuator implements NotificationActuator {
     }
 
     @Override
-    public void triggerNotification(DoorbellEvent doorbellEvent) {
+    public boolean notify(DoorbellEvent doorbellEvent) {
         LOGGER.info("Received a DoorbellEvent :: Triggering VoIP call.");
-        this.doNotificationCall();
+        return this.doNotificationCall();
     }
 
-    private void doNotificationCall() {
+    private boolean doNotificationCall() {
         this.eventManager.callDefaultCalleeAndHangup();
+        return true;
     }
 }

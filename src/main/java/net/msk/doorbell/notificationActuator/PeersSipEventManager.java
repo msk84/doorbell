@@ -29,7 +29,7 @@ public class PeersSipEventManager implements SipListener {
             try {
                 userAgent.register();
             } catch (SipUriSyntaxException e) {
-                e.printStackTrace();
+                LOGGER.error("Failed to register due to invalid notification number.", e);
             }
         }).start();
     }
@@ -43,7 +43,7 @@ public class PeersSipEventManager implements SipListener {
                 LOGGER.info("Trigger delayed hangup.");
                 this.delayedHangup(this.peersCustomConfig.getHangupDelay());
             } catch (final SipUriSyntaxException e) {
-                e.printStackTrace();
+                LOGGER.error("Failed to call due to invalid notification number.", e);
             }
         }).start();
     }
@@ -54,7 +54,7 @@ public class PeersSipEventManager implements SipListener {
                 Thread.sleep(1000 * seconds);
                 this.hangup();
             } catch (final InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.error("Delayed hangup was interrupted.", e);
             }
         }).start();
     }
@@ -65,7 +65,7 @@ public class PeersSipEventManager implements SipListener {
                 LOGGER.info("Do call to {}.", callee);
                 this.sipRequest = this.userAgent.invite(callee, null);
             } catch (final SipUriSyntaxException e) {
-                e.printStackTrace();
+                LOGGER.error("Failed to call due to invalid notification number.", e);
             }
         }).start();
     }
@@ -81,29 +81,36 @@ public class PeersSipEventManager implements SipListener {
 
     @Override
     public void registerSuccessful(final SipResponse sipResponse) {
+        LOGGER.info("SIP registration was successful.");
     }
 
     @Override
     public void registerFailed(final SipResponse sipResponse) {
+        LOGGER.error("SIP registraiton failed.");
     }
 
     @Override
     public void incomingCall(final SipRequest sipRequest, final SipResponse sipResponse) {
+        LOGGER.info("Incoming call!");
     }
 
     @Override
     public void remoteHangup(final SipRequest sipRequest) {
+        LOGGER.info("Remote hangup!");
     }
 
     @Override
     public void ringing(final SipResponse sipResponse) {
+        LOGGER.info("Ringing!");
     }
 
     @Override
     public void calleePickup(final SipResponse sipResponse) {
+        LOGGER.info("Callee picked up!");
     }
 
     @Override
     public void error(final SipResponse sipResponse) {
+        LOGGER.error("Error...");
     }
 }
