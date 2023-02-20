@@ -17,7 +17,7 @@
                         <span class="fs-5">Ring the bell</span>
                     </div>
                     <div class="col">
-                        <span class="fs-5"><button class="btn btn-primary" type="submit" th:onclick="ring()">Ring</button></span>
+                        <span class="fs-5"><button class="btn btn-primary" type="submit" th:onclick="triggerTestRing()">Ring</button></span>
                     </div>
                 </div>
                 <div class="row p-2">
@@ -25,7 +25,15 @@
                         <span class="fs-5">Open the door</span>
                     </div>
                     <div class="col">
-                        <span class="fs-5"><button class="btn btn-primary" type="submit" th:onclick="openDoor()" disabled>Open</button></span>
+                        <span class="fs-5"><button class="btn btn-primary" type="submit" th:onclick="triggerTestOpenDoor()" disabled>Open</button></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col">
+                        <span class="fs-5">Send test mail</span>
+                    </div>
+                    <div class="col">
+                        <span class="fs-5"><button class="btn btn-primary" type="submit" th:onclick="triggerTestMail()">Send test mail</button></span>
                     </div>
                 </div>
             </div>

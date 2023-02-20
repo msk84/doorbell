@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
@@ -23,17 +23,17 @@ public class EmailNotificationActuator implements NotificationActuator {
     private static final String EMAIL_REGEX = "^(.+)@(.+)$";
     private static final Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
 
-    private final JavaMailSenderImpl mailService;
+    private final MailSender mailSender;
 
     @Value("${spring.mail.username}")
-    private String mailSender;
+    private String mailSenderUser;
 
     @Value("${doorbell.notification.mail.recipients}")
     private String mailRecipients;
 
-    public EmailNotificationActuator(final DoorbellService doorbellService) {
+    public EmailNotificationActuator(final DoorbellService doorbellService, final MailSender mailSender) {
         doorbellService.registerNotificationActuator(this);
-        this.mailService = new JavaMailSenderImpl();
+        this.mailSender = mailSender;
     }
 
     @Override
@@ -60,8 +60,8 @@ public class EmailNotificationActuator implements NotificationActuator {
 
     private boolean sendNotificationMail(final DoorbellEvent doorbellEvent) {
         final SimpleMailMessage message = new SimpleMailMessage();
-        if(emailPattern.matcher(this.mailSender).matches() && emailPattern.matcher(this.mailRecipients).matches()) {
-            message.setFrom(this.mailSender);
+        if(emailPattern.matcher(this.mailSenderUser).matches() && emailPattern.matcher(this.mailRecipients).matches()) {
+            message.setFrom(this.mailSenderUser);
             message.setTo(this.mailRecipients);
             message.setSubject("Doorbell notification :: " + doorbellEvent.getEventDescription());
             final String mailText = "Event timestamp: " +
@@ -71,7 +71,7 @@ public class EmailNotificationActuator implements NotificationActuator {
                     "\nEvent description: " +
                     doorbellEvent.getEventDescription();
             message.setText(mailText);
-            this.mailService.send(message);
+            this.mailSender.send(message);
             LOGGER.trace("Notification mail sent to {}.", this.mailRecipients);
             return true;
         }

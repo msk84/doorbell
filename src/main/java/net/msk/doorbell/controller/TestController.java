@@ -1,6 +1,7 @@
 package net.msk.doorbell.controller;
 
 import net.msk.doorbell.DoorbellEvent;
+import net.msk.doorbell.notificationActuator.EmailNotificationActuator;
 import net.msk.doorbell.service.DoorbellService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +17,11 @@ public class TestController {
 
     private final DoorbellService doorbellService;
 
-    public TestController(final DoorbellService doorbellService) {
+    private final EmailNotificationActuator emailNotificationActuator;
+
+    public TestController(final DoorbellService doorbellService, final EmailNotificationActuator emailNotificationActuator) {
         this.doorbellService = doorbellService;
+        this.emailNotificationActuator = emailNotificationActuator;
     }
 
     @PostMapping("/event")
@@ -30,5 +34,11 @@ public class TestController {
     public void triggerTestOpen() {
         LOGGER.info("Triggering open door action now.");
         this.doorbellService.openDoor();
+    }
+
+    @PostMapping("/mail")
+    public void triggerTestMail() {
+        LOGGER.info("Triggering open door action now.");
+        this.emailNotificationActuator.notify(new DoorbellEvent("test.mail", "Test event for triggering mail."));
     }
 }
