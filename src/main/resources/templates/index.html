@@ -10,21 +10,22 @@
                 <h1 class="display-3">Doorbell</h1>
             </div>
 
-            <div th:each="event : ${event_log}">
-                <div class="container-fluid border rounded">
-                    <div class="row">
-                        <div class="col">
-                            <span class="fs-5" th:text="${#temporals.format(event.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></span>
-                        </div>
-                        <div class="col">
-                            <span class="fs-5" th:text="${event.eventQualifier}"></span>
-                        </div>
-                        <div class="col">
-                            <span class="fs-5" th:text="${event.eventDescription}"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <table class="table table-striped">
+                <thead>
+                    <th scope="col">#</th>
+                    <th scope="col">Timestamp</th>
+                    <th scope="col">Event</th>
+                    <th scope="col">Notifications</th>
+                </thead>
+                <tbody>
+                    <tr th:each="event, dataIndex : ${event_log}">
+                        <th scope="row" th:text="${dataIndex.index}"></th>
+                        <td th:text="${#temporals.format(event.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${event.eventDescription}"></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </main>
 
