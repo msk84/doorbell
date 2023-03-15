@@ -20,6 +20,11 @@ public class TemplateController {
         return "index";
     }
 
+    @GetMapping("/settings")
+    public String settingsPage(final Model model) {
+        return "settings";
+    }
+
     @GetMapping("/test")
     public String testPage(final Model model) {
         return "test";
