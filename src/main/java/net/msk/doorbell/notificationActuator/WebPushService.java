@@ -7,6 +7,8 @@ import nl.martijndwars.webpush.Subscription;
 import org.apache.http.HttpResponse;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jose4j.lang.JoseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class WebPushService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebPushService.class);
 
     @Value("${notificationActuator.webpush.vapid.publicKey}")
     private String publicKey;
@@ -52,19 +56,22 @@ public class WebPushService {
     }
 
     public void sendNotification() {
-        Subscription theSub = this.subscriptions.get(0);
-
-        try {
-            final Notification myNotification = Notification.builder()
-                    .userPublicKey(theSub.keys.p256dh)
-                    .userAuth(theSub.keys.auth)
-                    .endpoint(theSub.endpoint)
-                    .payload("{\"title\": \"Server says hello!\",\"body\": \"It is now: %s\"}")
-                    .ttl(60*60)
-                    .build();
-            final HttpResponse res = this.pushService.send(myNotification);
-        } catch (GeneralSecurityException | InterruptedException | IOException | JoseException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        this.subscriptions.forEach((sub) -> {
+            try {
+                final Notification myNotification = Notification.builder()
+                        .userPublicKey(sub.keys.p256dh)
+                        .userAuth(sub.keys.auth)
+                        .endpoint(sub.endpoint)
+                        .payload("{\"title\": \"Doorbell!\",\"message\": \"Ring! Ring!\"}")
+                        .ttl(60 * 60)
+                        .build();
+                final HttpResponse res = this.pushService.send(myNotification);
+                LOGGER.info("Tried sending notification. Result: " + res.toString());
+            }
+            catch (GeneralSecurityException | InterruptedException | IOException | JoseException |
+                   ExecutionException e) {
+                LOGGER.error("Sending notification failed.", e);
+            }
+        });
     }
 }

@@ -11,8 +11,6 @@ function subscribe() {
                         return subscription;
                     }
 
-                    console.debug("Get servers publicKey.");
-                    // Get the server's public key
                     const response = await fetch('./api/webpush/publicKey');
                     const vapidPublicKey = await response.text();
 
@@ -25,14 +23,14 @@ function subscribe() {
                 });
         }).then(function (subscription) {
             console.debug("The subscription: " + JSON.stringify(subscription));
-        // Send the subscription details to the server using the Fetch API.
-        fetch('./api/webpush/subscribe', {
-            method: 'post',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(subscription),
-        });
+
+            fetch('./api/webpush/subscribe', {
+                method: 'post',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(subscription),
+            });
     })
     .catch((error) => {
         console.error("Something went wrong: " + error);
