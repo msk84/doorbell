@@ -1,5 +1,5 @@
 function triggerTestRing() {
-    fetch("/api/test/event", {
+    fetch("./api/test/event", {
         method: 'POST'
     })
         .then(() => console.log("Successfully triggered test ring."))
@@ -7,7 +7,7 @@ function triggerTestRing() {
 }
 
 function triggerTestOpenDoor() {
-    fetch("/api/test/open", {
+    fetch("./api/test/open", {
         method: 'POST'
     })
         .then(() => console.log("Successfully triggered test open."))
@@ -15,9 +15,20 @@ function triggerTestOpenDoor() {
 }
 
 function triggerTestMail() {
-    fetch("/api/test/mail", {
+    fetch("./api/test/mail", {
         method: 'POST'
     })
         .then(() => console.log("Successfully triggered test mail."))
         .catch(() => console.error("Failed to trigger test mail."));
+}
+
+function triggerWebNotification() {
+    fetch('./api/webpush/notify', {
+        method: 'post',
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+        .then(() => console.log("Successfully triggered web notification."))
+        .catch(() => console.error("Failed to trigger web notification."));
 }
