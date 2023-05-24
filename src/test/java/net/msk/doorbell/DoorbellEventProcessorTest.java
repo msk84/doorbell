@@ -1,6 +1,5 @@
 package net.msk.doorbell;
 
-import net.msk.doorbell.eventSources.GpioControllerSingleton;
 import net.msk.doorbell.notificationActuator.PeersSipPhoneActuator;
 import net.msk.doorbell.notificationActuator.NotificationActuatorType;
 import net.msk.doorbell.persistance.EventLogRepository;
