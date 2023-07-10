@@ -36,3 +36,7 @@ function subscribe() {
         console.error("Something went wrong: " + error);
     });
 }
+
+function unsubscribe() {
+    console.log("Unsubscribe called but not implemented...");
+}
