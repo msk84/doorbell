@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Entity
 public class EventLogItemEntity {
@@ -47,6 +49,10 @@ public class EventLogItemEntity {
 
     public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public ZonedDateTime getZonedTimestamp() {
+        return this.timestamp.atZoneSameInstant(ZoneId.systemDefault());
     }
 
     public String getEventQualifier() {
