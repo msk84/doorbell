@@ -28,7 +28,7 @@ public class EmailNotificationActuator implements NotificationActuator {
     @Value("${spring.mail.username}")
     private String mailSenderUser;
 
-    @Value("${doorbell.notification.mail.recipients}")
+    @Value("${notificationActuator.mail.recipients}")
     private String mailRecipients;
 
     public EmailNotificationActuator(final DoorbellService doorbellService, final MailSender mailSender) {
@@ -48,7 +48,7 @@ public class EmailNotificationActuator implements NotificationActuator {
 
     @Override
     public boolean notify(final DoorbellEvent doorbellEvent) {
-        LOGGER.info("Would do email notification for event: {}", doorbellEvent);
+        LOGGER.info("Will do email notification for event: {}", doorbellEvent);
         try {
             return this.sendNotificationMail(doorbellEvent);
         }
