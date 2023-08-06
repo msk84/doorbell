@@ -18,7 +18,14 @@ function triggerTestMail() {
     fetch("./api/test/mail", {
         method: 'POST'
     })
-        .then(() => console.log("Successfully triggered test mail."))
+        .then(response => {
+            if(response.ok) {
+                console.log("Successfully triggered test mail.");
+            }
+            else {
+                console.error("Error triggering request: " + response.status);
+            }
+        })
         .catch(() => console.error("Failed to trigger test mail."));
 }
 
