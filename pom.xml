@@ -13,7 +13,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.1.2</spring.boot.version>
+        <spring.boot.version>3.1.3</spring.boot.version>
         <peers.version>0.5.1</peers.version>
         <pi4j.version>2.3.0</pi4j.version>
     </properties>
@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
+        <version>3.1.3</version>
     </parent>
 
     <dependencies>
